@@ -89,6 +89,28 @@ func (f *Frequencies) Len() int {
 	return len(*f)
 }
 
+// SumUKTesters adds the number of testers from the United Kingdom,
+// England, Northern Ireland, Wales and Scotland together as United Kingdom.
+func (f *Frequencies) SumUKTesters() {
+	ukIdx := -1
+	var sum float32 = 0
+	for i, freq := range *f {
+		switch {
+		case freq.Country == "United Kingdom":
+			sum += freq.Persons
+			ukIdx = i
+		case freq.Country == "England" ||
+			freq.Country == "Wales" ||
+			freq.Country == "Scotland" ||
+			freq.Country == "Northern Ireland":
+			sum += freq.Persons
+		}
+	}
+	if ukIdx != 0 {
+		(*f)[ukIdx].Persons = sum
+	}
+}
+
 func (f *Frequencies) Less(i, j int) bool {
 	if (*f)[i].Persons < (*f)[j].Persons {
 		return true

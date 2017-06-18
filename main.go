@@ -18,6 +18,7 @@ func main() {
 		col      = flag.Int("col", 3, "Column number that contains country information.")
 		relative = flag.Bool("relative", true, "Calculates relative or absolute frequencies.")
 		tin      = flag.String("tin", "", "Testers in: A file that contains the number of persons who have tested for each country.")
+		sumuk    = flag.Bool("sumuk", false, "Adds the number of testers from England, Wales, Scotland and Northern Ireland to United Kingdom.")
 	)
 	flag.Parse()
 
@@ -45,6 +46,17 @@ func main() {
 	}
 
 	countryFreqs := projectTable.FrequenciesOf(totalTesters)
+
+	// Add testers from England, Wales, Scotland and N. Ireland to United Kingdom.
+	if *sumuk == true {
+		countryFreqs.SumUKTesters()
+		if totalTesters != nil {
+			totalTesters["United Kingdom"] += totalTesters["England"] +
+				totalTesters["Wales"] +
+				totalTesters["Scotland"] +
+				totalTesters["Northern Ireland"]
+		}
+	}
 
 	// Calculate relative frequencies.
 	if *relative == true {
