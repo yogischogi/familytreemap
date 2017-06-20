@@ -16,59 +16,66 @@ func main() {
 		in       = flag.String("in", "", "Filename of input table.")
 		out      = flag.String("out", "", "Filename for results in CSV format.")
 		col      = flag.Int("col", 3, "Column number that contains country information.")
-		relative = flag.Bool("relative", true, "Calculates relative or absolute frequencies.")
-		tin      = flag.String("tin", "", "Testers in: A file that contains the number of persons who have tested for each country.")
-		sumuk    = flag.Bool("sumuk", false, "Adds the number of testers from England, Wales, Scotland and Northern Ireland to United Kingdom.")
+		totalsin = flag.String("totalsin", "", "Totals in: Number of testers from each country.")
+		sumuk    = flag.Bool("sumuk", false, "Sum UK: Adds the number of testers from England, Wales, Scotland and Northern Ireland to United Kingdom.")
 	)
 	flag.Parse()
 
-	// Get the number of testers for each country.
-	var totalTesters map[string]float32
-	var err error
-	if *tin != "" {
-		totalTesters, err = ftdna.ReadCountryTesters(*tin)
-		if err != nil {
-			fmt.Printf("Error reading the number of testers from file, %v.\n", err)
-			os.Exit(1)
-		}
-	} else {
-		fmt.Print("Please provide the number of total testers " +
-			"for each country by using -tin <filename>.\r\n" +
-			"Using example data instead.\r\n")
-		totalTesters = ftdna.TotalTesters
-	}
+	var finalFrequencies ftdna.Frequencies
 
-	// Read Family Tree project data.
-	projectTable, err := ftdna.NewTableFromFile(*in, *col-1)
+	// Read countries from Family Tree DNA project spreadsheet.
+	countries, err := ftdna.ReadCountriesFromCSV(*in, *col-1)
 	if err != nil {
 		fmt.Printf("Error reading project table, %v.\n", err)
 		os.Exit(1)
 	}
 
-	countryFreqs := projectTable.FrequenciesOf(totalTesters)
+	countryFreqs := countries.Frequencies()
 
 	// Add testers from England, Wales, Scotland and N. Ireland to United Kingdom.
 	if *sumuk == true {
 		countryFreqs.SumUKTesters()
-		if totalTesters != nil {
+	}
+
+	// Calculate relative frequencies.
+	if *totalsin != "" {
+		// Read the total number of testers from each country.
+		var totalTesters map[string]float32
+		var err error
+		if *totalsin != "" {
+			totalTesters, err = ftdna.ReadCountryTestersFromCSV(*totalsin)
+			if err != nil {
+				fmt.Printf("Error reading the number of testers from file, %v.\n", err)
+				os.Exit(1)
+			}
+		}
+
+		// Add testers from England, Wales, Scotland and N. Ireland to United Kingdom.
+		if *sumuk == true {
 			totalTesters["United Kingdom"] += totalTesters["England"] +
 				totalTesters["Wales"] +
 				totalTesters["Scotland"] +
 				totalTesters["Northern Ireland"]
 		}
-	}
 
-	// Calculate relative frequencies.
-	if *relative == true {
-		for i, _ := range countryFreqs {
-			countryFreqs[i].Persons = 100 * countryFreqs[i].Persons / totalTesters[countryFreqs[i].Country]
+		// Calculate relative frequencies.
+		relFreqs := make([]ftdna.Frequency, 0)
+		for _, freq := range countryFreqs {
+			total := totalTesters[freq.Country]
+			if total > 0 {
+				rel := freq.Persons / total * 100
+				relFreqs = append(relFreqs, ftdna.Frequency{Country: freq.Country, Persons: rel})
+			}
 		}
+		finalFrequencies = relFreqs
+	} else {
+		finalFrequencies = countryFreqs
 	}
 
-	sort.Stable(sort.Reverse(&countryFreqs))
+	sort.Stable(sort.Reverse(&finalFrequencies))
 
 	// Write results to file.
-	err = countryFreqs.WriteCSV(*out)
+	err = finalFrequencies.WriteCSV(*out)
 	if err != nil {
 		fmt.Printf("Error writing result to file in CSV format, %v.\r\n", err)
 		os.Exit(1)

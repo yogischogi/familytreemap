@@ -39,10 +39,10 @@ phylofriend at projectory.de\\
 Familytreemap calculates population frequencies
 (relative or absolute) from Family Tree DNA projects.
 
-It's main purpose is to create heat maps of project members.
+It's main purpose is to create intensity maps of project members.
 
 
-\section{Command Line Options}
+\section{Command line options}
 
 Familytreemap is a command line program. It is invoked by
 
@@ -54,17 +54,14 @@ Familytreemap is a command line program. It is invoked by
 
 \begin{description}
 \item[-help] Prints available program options.
-\item[-tin] Input file (testers is) contains the total
-  number of testers for each country.
-\item[-in] Input file contains a table with Family Tree DNA
-  project data in CSV format.
+\item[-totalsin] Totals in: Total number of testers from each country.
+\item[-in] Input file that contains a table with Family Tree DNA
+  project data in CSV format. This is usually the project spreadsheet
+  that lists the STR results.
 \item[-col] Number of the column that contains the country names.
-\item[-out] Output file contains population frequencies in
+\item[-out] Output file that contains population frequencies in
   CSV format.
-\item[-relative] If \texttt{-relative=false} the absolute
-  number of testers belonging to a group is calculated.
-  Default value is \texttt{-relative=true}.
-\item[-sumuk] (sumUK) If \texttt{-sumuk=true} the number of
+\item[-sumuk] (sum UK) If \texttt{-sumuk=true} the number of
   testers from England, Wales, Scotland and Northern Ireland
   is added to United Kingdom. Default is \texttt{-sumuk=false}
   because this is the way the data is reported by Family Tree DNA.
@@ -104,7 +101,7 @@ Familytreemap is a command line program. It is invoked by
 \end{enumerate}
 
 
-\section{First Usage}
+\section{First usage}
 
 \begin{enumerate}
 \item Go to a Family Tree DNA project on the web and open the
@@ -112,55 +109,88 @@ Familytreemap is a command line program. It is invoked by
 \item Copy the results into a spreadsheet and save it in
   CSV (Comma Separated Values) format. For this example
   name it \emph{projectdata.csv}.
+
+  If you are an administrator you can directly download the
+  spreadsheet from your Family Tree DNA GAP account.
+
 \item Open a command line interpreter and go to the
    directory where your files are.
 \item Determine the number of the column which contains
   the countries. Often this is 3, familytreemap's default
   value.
 \item Issue a command to test if the program works:\\
-  \texttt{familytreemap -in projectdata.csv -out result.csv -col 3}\\
-  The program should be working and prompt you to use
-  the \texttt{-tin} option to provide the number of total testers
-  for each country. Without the \texttt{-tin} option it
-  is not possible to calculate an accurate relative distribution.
-  Instead the program uses build in example data.
+  \texttt{familytreemap -in=projectdata.csv -out=result.csv -col=3}\\
+  If everything works correctly, the file \emph{result.csv}
+  contains a list of countries with the number of testers
+  from each country.
 \end{enumerate}
 
 
-\section{The -tin Option}
+\section{Calculating relative concentrations}
 
-To calculate a relative distribution of project members it
-is necessary to provide a number for each country which
-denotes the total number of testers from that country.
+Until now we have only determined how many persons from each
+country took a genetic test. This results in a bias because
+Family Tree DNA usually has much more customers from highly
+populated Western countries than from the rest of the world.
 
-This is done by using the \texttt{-tin} option and providing
-a file in JSON format that contains country names and the
-total number of testers. A very simple example file for just
-three countries looks like this:
+Often we would like the percentage value of how many persons
+from a specific country belong to a certain haplogroup. For
+this we must divide the number of persons from that haplogroup
+by the total number of testers from the country.
+
+Family Tree DNA does not provide the total number of testers
+from each country but it does provide the number of 12-marker
+testers. This should be a very good approximation because nearly
+every male customer has tested for at least 12 markers.
+
+To view the number of 12-marker testers you can sign into
+Family Tree DNA and go to \emph{Ancestral Origins}.
+
+To calculate relative frequencies the Familytreemap program
+needs a CSV file that contains the total number of testers
+from each country. You have to create this file yourself.
+The format is very simple. A basic example looks like this:
 
 \begin{verbatim}
-{"Belarus":1000,
-"Belgium":2000,
-"Brazil":100}
+Country,Testers
+Belarus,1000
+Belgium,2000
+Brazil,100
 \end{verbatim}
 
-\noindent
-A good way to get the number of testers for each country 
-is to sign into Family Tree DNA and go to \emph{Ancestral Origins}.
-If you have completed your \texttt{-tin} file, you can
-name it for example \emph{totals.json} and provide it to
-the program like this:
+If you save your file as \emph{12-marker-testers.csv}
+you can start to calculate a relative distribution by using
+the \texttt{-totalsin} option:
 
 \vspace{1ex}
 \noindent
-\texttt{familytreemap -tin totals.json -in projectdata.csv -out result.csv -col 3}
+\texttt{familytreemap -totalsin=12-marker-testers.csv -in=projectdata.csv -out=result.csv -col=3}
 \vspace{1ex}
 
 \noindent
-The program should be fully working now.
+The file \emph{results.csv} should now contain the percentage
+value of persons belonging to a specific project or haplogroup
+relative to the total number of 12-marker testers from each country.
 
 
-\section{How to Create a Heat Map}
+\section{Does England belong to the United Kingdom?}
+
+Family Tree DNA reports the number of testers according to
+self reported origins. They do not apply any post-processing.
+As a result persons from England, Wales, Scotland and Northern
+Ireland are not counted as belonging to the United Kingdom.
+
+To get the correct count Familytreemap provides the 
+\texttt{-sumuk} (sum UK) option, which adds the testers from
+England, Wales, Scotland and Northern Ireland to the United
+Kingdom. Example:
+
+\vspace{1ex}
+\noindent
+\texttt{familytreemap -totalsin=12-marker-testers.csv -in=projectdata.csv -out=result.csv -col=3 -sumuk=true}
+
+
+\section{How to create a heat map}
 
 \begin{figure}[ht]
 \centering
@@ -171,7 +201,7 @@ to a haplogroup. Created with \href{http://www.openheatmap.com/}{OpenHeatMap}.}
 
 \begin{enumerate}
 \item Run the familytreemap program:\\
-  \texttt{familytreemap -tin totals.json -in projectdata.csv -out result.csv -col 3}
+  \texttt{familytreemap -totalsin=12-marker-testers.csv -in=projectdata.csv -out=result.csv -col=3 -sumuk=true}
 \item Open your web browser and go to
       \href{http://www.openheatmap.com/}{http://www.openheatmap.com}.
 	\begin{enumerate}

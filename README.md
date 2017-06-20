@@ -5,6 +5,10 @@ Familytreemap calculates population frequencies
 
 It's main purpose is to create heat maps of project members.
 
+![Geograpical distribution of a haplogroup](https://raw.githubusercontent.com/yogischogi/familytreemap/master/doc/heatmap.png)
+
+The image shows the geographical distribution of persons
+belonging to a specific haplogroup.
 
 ## Documentation
 
