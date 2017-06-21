@@ -130,7 +130,7 @@ func (f *Frequencies) WriteCSV(filename string) error {
 	}
 	// Write rows.
 	for _, freq := range *f {
-		_, err = writer.WriteString(fmt.Sprintf("%s,%f\r\n", freq.Country, freq.Persons))
+		_, err = writer.WriteString(fmt.Sprintf("%s,%g\r\n", freq.Country, freq.Persons))
 		if err != nil {
 			return err
 		}
