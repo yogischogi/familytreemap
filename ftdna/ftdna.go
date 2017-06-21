@@ -107,8 +107,10 @@ func (f *Frequencies) SumUKTesters() {
 			sum += freq.Persons
 		}
 	}
-	if ukIdx != 0 {
+	if ukIdx != -1 {
 		(*f)[ukIdx].Persons = sum
+	} else if sum > 0 {
+		*f = append(*f, Frequency{Country: "United Kingdom", Persons: sum})
 	}
 }
 
