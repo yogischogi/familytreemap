@@ -9,6 +9,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/yogischogi/familytreemap/statistics"
 )
 
 // List of countries from a Family Tree DNA project spreadsheet.
@@ -179,4 +181,54 @@ func ReadCountryTestersFromCSV(filename string) (map[string]float32, error) {
 		testers[country] = float32(cTesters)
 	}
 	return testers, nil
+}
+
+// WriteStatisticsAsCSV writes elaborate statistical information
+// to a file.
+//   freqs: Countries and count of positive results.
+//   totals: Total number of testers from different countries.
+func WriteStatisticsAsCSV(filename string, freqs Frequencies, totals map[string]float32) error {
+	// Open file.
+	outfile, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	defer outfile.Close()
+
+	// Write header.
+	writer := bufio.NewWriter(outfile)
+	header := fmt.Sprintf("%s,%s,%s,%s,%s,%s,%s,%s\r\n", "Country", "Sample_size", "Positives", "Fraction", "Margin_of_error", "Quality", "Min_sample_size", "Acceptable_sample_size")
+	_, err = writer.WriteString(header)
+	if err != nil {
+		return err
+	}
+	// Write rows.
+	for _, freq := range freqs {
+		if totals[freq.Country] > 0 {
+			country := freq.Country
+			sampleSize := totals[freq.Country]
+			positives := freq.Persons
+			p, s := statistics.Probability(float64(sampleSize), float64(positives))
+			fraction := p
+			marginOfError := s
+			quality := p / s
+			minSampleSize := statistics.MinSampleSize(p)
+			acceptableSampleSize := statistics.AcceptableSampleSize(p)
+
+			_, err = writer.WriteString(fmt.Sprintf("%s,%g,%g,%g,%g,%g,%g,%g\r\n",
+				country,
+				sampleSize,
+				positives,
+				fraction,
+				marginOfError,
+				quality,
+				minSampleSize,
+				acceptableSampleSize))
+			if err != nil {
+				return err
+			}
+		}
+	}
+	err = writer.Flush()
+	return err
 }

@@ -18,6 +18,7 @@ func main() {
 		col      = flag.Int("col", 3, "Column number that contains country information.")
 		totalsin = flag.String("totalsin", "", "Totals in: Number of testers from each country.")
 		sumuk    = flag.Bool("sumuk", false, "Sum UK: Adds the number of testers from England, Wales, Scotland and Northern Ireland to United Kingdom.")
+		statout  = flag.String("statout", "", "Filename for elaborate statistical information.")
 	)
 	flag.Parse()
 
@@ -58,7 +59,15 @@ func main() {
 				totalTesters["Northern Ireland"]
 		}
 
-		// Calculate relative frequencies.
+		// Write elaborate statistical information.
+		if *statout != "" {
+			err = ftdna.WriteStatisticsAsCSV(*statout, countryFreqs, totalTesters)
+			if err != nil {
+				fmt.Printf("Error writing statistics to file, %v.\n", err)
+			}
+		}
+
+		// Calculate relative frequencies in percent.
 		relFreqs := make([]ftdna.Frequency, 0)
 		for _, freq := range countryFreqs {
 			total := totalTesters[freq.Country]
@@ -72,12 +81,13 @@ func main() {
 		finalFrequencies = countryFreqs
 	}
 
-	sort.Stable(sort.Reverse(&finalFrequencies))
-
-	// Write results to file.
-	err = finalFrequencies.WriteCSV(*out)
-	if err != nil {
-		fmt.Printf("Error writing result to file in CSV format, %v.\r\n", err)
-		os.Exit(1)
+	if *out != "" {
+		sort.Stable(sort.Reverse(&finalFrequencies))
+		// Write results to file.
+		err = finalFrequencies.WriteCSV(*out)
+		if err != nil {
+			fmt.Printf("Error writing result to file in CSV format, %v.\r\n", err)
+			os.Exit(1)
+		}
 	}
 }
