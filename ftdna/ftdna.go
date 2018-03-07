@@ -6,6 +6,7 @@ import (
 	"encoding/csv"
 	"errors"
 	"fmt"
+	"math"
 	"os"
 	"strconv"
 	"strings"
@@ -20,7 +21,7 @@ type Countries []string
 // Family Tree DNA project spreadsheet.
 // The spreadsheet must be in CSV format. countryCol is the number
 // of the column that contains the countries, starting with 0.
-func ReadCountriesFromCSV(filename string, countryCol int) (Countries, error) {
+func ReadCountriesFromCSV(filename string, countryCol int, skipHeader bool) (Countries, error) {
 	infile, err := os.Open(filename)
 	if err != nil {
 		return nil, err
@@ -29,9 +30,14 @@ func ReadCountriesFromCSV(filename string, countryCol int) (Countries, error) {
 
 	// Read all CSV records from file.
 	csvReader := csv.NewReader(infile)
+	csvReader.LazyQuotes = true
+	csvReader.FieldsPerRecord = -1
 	rows, err := csvReader.ReadAll()
 	if err != nil {
 		return nil, err
+	}
+	if skipHeader == true {
+		rows = rows[1:]
 	}
 
 	// Add valid country entries to the result.
@@ -50,7 +56,7 @@ func ReadCountriesFromCSV(filename string, countryCol int) (Countries, error) {
 // Frequencies returns the number of testers from each country.
 func (c *Countries) Frequencies() Frequencies {
 	// Make a map that tells us how often a country appears in the list of countries.
-	countryCount := make(map[string]float32)
+	countryCount := make(map[string]float64)
 	for _, name := range *c {
 		if countryCount[name] > 0 {
 			countryCount[name]++
@@ -70,11 +76,19 @@ func (c *Countries) Frequencies() Frequencies {
 // Frequency shows how many persons from a country have been tested.
 type Frequency struct {
 	Country string
-	Persons float32
+	Persons float64
 }
 
 // Frequencies is a list of Frequency that satisfies the sort.Interface.
 type Frequencies []Frequency
+
+// Log2 performs a logarithm on all persons in frequencies.
+// This is to get a logarithmic scale which looks nicer in many cases.
+func (f *Frequencies) Log2() {
+	for i, _ := range *f {
+		(*f)[i].Persons = math.Log2((*f)[i].Persons + 1)
+	}
+}
 
 func (f *Frequencies) Len() int {
 	return len(*f)
@@ -96,7 +110,7 @@ func (f *Frequencies) Swap(i, j int) {
 // England, Northern Ireland, Wales and Scotland together as United Kingdom.
 func (f *Frequencies) SumUKTesters() {
 	ukIdx := -1
-	var sum float32 = 0
+	var sum float64 = 0
 	for i, freq := range *f {
 		switch {
 		case freq.Country == "United Kingdom":
@@ -134,7 +148,7 @@ func (f *Frequencies) WriteCSV(filename string) error {
 	}
 	// Write rows.
 	for _, freq := range *f {
-		_, err = writer.WriteString(fmt.Sprintf("%s,%g\r\n", freq.Country, freq.Persons))
+		_, err = writer.WriteString(fmt.Sprintf("%s,%.5g\r\n", freq.Country, freq.Persons))
 		if err != nil {
 			return err
 		}
@@ -150,7 +164,7 @@ func (f *Frequencies) WriteCSV(filename string) error {
 // 	Belarus,1000
 //	Belgium,2000
 //	Brazil,100
-func ReadCountryTestersFromCSV(filename string) (map[string]float32, error) {
+func ReadCountryTestersFromCSV(filename string) (map[string]float64, error) {
 	infile, err := os.Open(filename)
 	if err != nil {
 		return nil, err
@@ -171,14 +185,14 @@ func ReadCountryTestersFromCSV(filename string) (map[string]float32, error) {
 	// Throw away header.
 	rows = rows[1:]
 
-	testers := make(map[string]float32)
+	testers := make(map[string]float64)
 	for _, row := range rows {
 		country := row[0]
-		cTesters, err := strconv.ParseFloat(row[1], 32)
+		cTesters, err := strconv.ParseFloat(row[1], 64)
 		if err != nil {
 			return nil, err
 		}
-		testers[country] = float32(cTesters)
+		testers[country] = cTesters
 	}
 	return testers, nil
 }
@@ -187,7 +201,7 @@ func ReadCountryTestersFromCSV(filename string) (map[string]float32, error) {
 // to a file.
 //   freqs: Countries and count of positive results.
 //   totals: Total number of testers from different countries.
-func WriteStatisticsAsCSV(filename string, freqs Frequencies, totals map[string]float32) error {
+func WriteStatisticsAsCSV(filename string, freqs Frequencies, totals map[string]float64) error {
 	// Open file.
 	outfile, err := os.Create(filename)
 	if err != nil {

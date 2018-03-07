@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2016.7.8)  25 JUN 2017 18:44
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.8.22)  7 MAR 2018 18:11
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -587,56 +587,63 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
 [2] [3]
-Overfull \hbox (11.3752pt too wide) in paragraph at lines 167--170
+Overfull \hbox (11.3752pt too wide) in paragraph at lines 171--174
 \OT1/cmtt/m/n/12 familytreemap -totalsin=12-marker-testers.csv -in=projectdata.
 csv
  []
 
-
-Overfull \hbox (11.3752pt too wide) in paragraph at lines 190--192
+[4]
+Overfull \hbox (11.3752pt too wide) in paragraph at lines 194--196
 \OT1/cmtt/m/n/12 familytreemap -totalsin=12-marker-testers.csv -in=projectdata.
 csv
  []
 
-<heatmap.png, id=84, 879.285pt x 416.55624pt>
+<heatmap-haplo.png, id=98, 879.285pt x 416.55624pt>
+File: heatmap-haplo.png Graphic file (type png)
+ <use heatmap-haplo.png>
+Package pdftex.def Info: heatmap-haplo.png used on input line 202.
+(pdftex.def)             Requested size: 369.88582pt x 175.22574pt.
+
+Overfull \hbox (40.7499pt too wide) in paragraph at lines 208--210
+\OT1/cmtt/m/n/12 familytreemap -totalsin=12-marker-testers.csv -in=projectdata.
+csv
+ []
+
+<heatmap.png, id=102, 1204.5pt x 602.25pt>
 File: heatmap.png Graphic file (type png)
  <use heatmap.png>
-Package pdftex.def Info: heatmap.png used on input line 198.
-(pdftex.def)             Requested size: 369.88582pt x 175.22574pt.
- [4]
-Overfull \hbox (40.7499pt too wide) in paragraph at lines 204--206
-\OT1/cmtt/m/n/12 familytreemap -totalsin=12-marker-testers.csv -in=projectdata.
-csv
- []
-
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 221.
-[5 <./heatmap.png>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 221.
+Package pdftex.def Info: heatmap.png used on input line 229.
+(pdftex.def)             Requested size: 369.88582pt x 184.94035pt.
+ [5 <./heatmap-haplo.png>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 268.
+ [6 <./heatmap.png>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 268.
  (./familytreemap.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 221.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 221.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 268.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 268.
 Package rerunfilecheck Info: File `familytreemap.out' has not changed.
-(rerunfilecheck)             Checksum: 98B31094F71F6E611C191DEC3229822C;535.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 221.
+(rerunfilecheck)             Checksum: EB1F0D397D5712C703F641FA0BC87FE5;700.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 268.
  ) 
 Here is how much of TeX's memory you used:
- 5841 strings out of 494394
- 83733 string characters out of 6171060
- 170065 words of memory out of 5000000
- 9068 multiletter control sequences out of 15000+600000
+ 5861 strings out of 494394
+ 83994 string characters out of 6171059
+ 171068 words of memory out of 5000000
+ 9074 multiletter control sequences out of 15000+600000
  9676 words of font info for 34 fonts, out of 8000000 for 9000
  430 hyphenation exceptions out of 8191
- 29i,6n,28p,255b,419s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 29i,6n,28p,318b,421s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share
 /texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texliv
 e/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl12.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/texlive/texmf-dist
-/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on familytreemap.pdf (5 pages, 156583 bytes).
+f-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/share/texlive/texmf-dist/fonts
+/type1/public/amsfonts/cm/cmtt12.pfb>
+Output written on familytreemap.pdf (6 pages, 273301 bytes).
 PDF statistics:
- 138 PDF objects out of 1000 (max. 8388607)
- 121 compressed objects within 2 object streams
- 37 named destinations out of 1000 (max. 500000)
- 78 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 176 PDF objects out of 1000 (max. 8388607)
+ 153 compressed objects within 2 object streams
+ 50 named destinations out of 1000 (max. 500000)
+ 99 words of extra memory for PDF output out of 10000 (max. 10000000)
 

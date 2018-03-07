@@ -1,14 +1,12 @@
 # Familytreemap
 
-Familytreemap calculates population frequencies
-(relative or absolute) from Family Tree DNA projects.
+Familytreemap is a helper program to create heatmaps
+from Family Tree DNA projects or MyHeritage matches lists.
 
-It's main purpose is to create heat maps of project members.
+![Geograpical distribution of MyHeritage matches](https://raw.githubusercontent.com/yogischogi/familytreemap/master/doc/heatmap.png)
 
-![Geograpical distribution of a haplogroup](https://raw.githubusercontent.com/yogischogi/familytreemap/master/doc/heatmap.png)
-
-The image shows the geographical distribution of persons
-belonging to a specific haplogroup.
+The image shows the geographical distribution of
+genetic matches at MyHeritage for a single person.
 
 ## Documentation
 

@@ -13,19 +13,21 @@ import (
 
 func main() {
 	var (
-		in       = flag.String("in", "", "Filename of input table.")
-		out      = flag.String("out", "", "Filename for results in CSV format.")
-		col      = flag.Int("col", 3, "Column number that contains country information.")
-		totalsin = flag.String("totalsin", "", "Totals in: Number of testers from each country.")
-		sumuk    = flag.Bool("sumuk", false, "Sum UK: Adds the number of testers from England, Wales, Scotland and Northern Ireland to United Kingdom.")
-		statout  = flag.String("statout", "", "Filename for elaborate statistical information.")
+		in         = flag.String("in", "", "Filename of input table.")
+		out        = flag.String("out", "", "Filename for results in CSV format.")
+		col        = flag.Int("col", 3, "Column number that contains country information.")
+		skipheader = flag.Bool("skipheader", false, "If this is true, the first line of the input file is ignored.")
+		totalsin   = flag.String("totalsin", "", "Totals in: Number of testers from each country.")
+		sumuk      = flag.Bool("sumuk", false, "Sum UK: Adds the number of testers from England, Wales, Scotland and Northern Ireland to United Kingdom.")
+		statout    = flag.String("statout", "", "Filename for elaborate statistical information.")
+		ln         = flag.Bool("ln", false, "Applies a logarithm to the number of persons to get nicer scales.")
 	)
 	flag.Parse()
 
 	var finalFrequencies ftdna.Frequencies
 
-	// Read countries from Family Tree DNA project spreadsheet.
-	countries, err := ftdna.ReadCountriesFromCSV(*in, *col-1)
+	// Read countries from spreadsheet.
+	countries, err := ftdna.ReadCountriesFromCSV(*in, *col-1, *skipheader)
 	if err != nil {
 		fmt.Printf("Error reading project table, %v.\n", err)
 		os.Exit(1)
@@ -41,7 +43,7 @@ func main() {
 	// Calculate relative frequencies.
 	if *totalsin != "" {
 		// Read the total number of testers from each country.
-		var totalTesters map[string]float32
+		var totalTesters map[string]float64
 		var err error
 		if *totalsin != "" {
 			totalTesters, err = ftdna.ReadCountryTestersFromCSV(*totalsin)
@@ -83,6 +85,10 @@ func main() {
 
 	if *out != "" {
 		sort.Stable(sort.Reverse(&finalFrequencies))
+		// Use logarithmic scale.
+		if *ln == true {
+			finalFrequencies.Log2()
+		}
 		// Write results to file.
 		err = finalFrequencies.WriteCSV(*out)
 		if err != nil {

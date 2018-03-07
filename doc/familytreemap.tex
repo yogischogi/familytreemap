@@ -59,6 +59,8 @@ Familytreemap is a command line program. It is invoked by
   project data in CSV format. This is usually the project spreadsheet
   that lists the STR results.
 \item[-col] Number of the column that contains the country names.
+\item[-skipheader] Ignore the first line of the input file.
+\item[-ln] Applies a logarithm to the number of persons to get a nice logarithmic scale.
 \item[-out] Output file that contains population frequencies in
   CSV format.
 \item[-sumuk] (sum UK) If \texttt{-sumuk=true} the number of
@@ -102,7 +104,9 @@ Familytreemap is a command line program. It is invoked by
 \end{enumerate}
 
 
-\section{First usage}
+\section{Family Tree DNA projects}
+
+\subsection{First usage}
 
 \begin{enumerate}
 \item Go to a Family Tree DNA project on the web and open the
@@ -127,7 +131,7 @@ Familytreemap is a command line program. It is invoked by
 \end{enumerate}
 
 
-\section{Calculating relative concentrations}
+\subsection{Calculating relative concentrations}
 
 Until now we have only determined how many persons from each
 country took a genetic test. This results in a bias because
@@ -174,7 +178,7 @@ value of persons belonging to a specific project or haplogroup
 relative to the total number of 12-marker testers from each country.
 
 
-\section{Does England belong to the United Kingdom?}
+\subsection{Does England belong to the United Kingdom?}
 
 Family Tree DNA reports the number of testers according to
 self reported origins. They do not apply any post-processing.
@@ -191,11 +195,11 @@ Kingdom. Example:
 \texttt{familytreemap -totalsin=12-marker-testers.csv -in=projectdata.csv -out=result.csv -col=3 -sumuk=true}
 
 
-\section{How to create a heat map}
+\subsection{Creating a heat map}
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=13cm]{heatmap.png}
+\includegraphics[width=13cm]{heatmap-haplo.png}
 \caption{Geographical distribution of persons belonging
 to a haplogroup. Created with \href{http://www.openheatmap.com/}{OpenHeatMap}.}
 \end{figure}
@@ -216,6 +220,49 @@ to a haplogroup. Created with \href{http://www.openheatmap.com/}{OpenHeatMap}.}
 \item You are done! You can share your map via social networks
   or take a screenshot of it.
 \end{enumerate}
+
+
+\section{MyHeritage matches}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=13cm]{heatmap.png}
+\caption{Worldwide heatmap of genetic matches.
+Created with \href{https://julialang.org/}{Julia},
+\href{http://gadflyjl.org/}{Gadfly} and
+\href{http://www.naturalearthdata.com/}{Natural Earth}.}
+\end{figure}
+
+Familytreemap can also be used to create a heatmap of
+MyHeritage matches. One of the easiest options is to use
+OpenHeatMap.
+
+\begin{enumerate}
+\item Get a list of your matches from MyHeritage
+	(MyHeritage $\rightarrow$ DNA $\rightarrow$ DNA Matches
+	$\rightarrow$ Advanced options $\rightarrow$ Export DNA Matches list).
+\item Run the familytreemap program on your matches list:\\
+  \texttt{familytreemap -in=MyHeritage-matches.csv -out=result.csv \\
+	-col=4 -skipheader=true}
+\item Open your web browser and go to
+      \href{http://www.openheatmap.com/}{http://www.openheatmap.com}.
+	\begin{enumerate}
+	\item Click on \emph{Create your map}.
+	\item \emph{Excel or CSV file}.
+	\item \emph{Upload} your results file,
+            in this example \emph{result.csv}.
+	\item \emph{View your map} and adjust the settings until you like it.
+	\item \emph{Save \& view}
+	\end{enumerate}
+\item You are done! You can share your map via social networks
+  or take a screenshot of it.
+\end{enumerate}
+
+
+
+
+
+
 
 
 \end{document}

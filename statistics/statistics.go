@@ -54,7 +54,7 @@ func MinSampleSize(p float64) float64 {
 // http://www.sjsu.edu/faculty/gerstman/StatPrimer/estimation.pdf
 func Probability(n float64, m float64) (p float64, s float64) {
 	p = m / n
-	// Quantil z = 1 - a/2 for 95% conficence.
+	// Quantil z = 1 - a/2 for 95% confidence.
 	var z float64 = 1.96
 	s = z * math.Sqrt(p*(1-p)/n)
 	return p, s

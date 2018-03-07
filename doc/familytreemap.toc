@@ -4,7 +4,9 @@
 \contentsline {section}{\numberline {3}Installation}{2}{section.3}
 \contentsline {subsection}{\numberline {3.1}Linux Mint}{2}{subsection.3.1}
 \contentsline {subsection}{\numberline {3.2}Windows, FreeBSD, Mac OS X}{3}{subsection.3.2}
-\contentsline {section}{\numberline {4}First usage}{3}{section.4}
-\contentsline {section}{\numberline {5}Calculating relative concentrations}{3}{section.5}
-\contentsline {section}{\numberline {6}Does England belong to the United Kingdom?}{4}{section.6}
-\contentsline {section}{\numberline {7}How to create a heat map}{5}{section.7}
+\contentsline {section}{\numberline {4}Family Tree DNA projects}{3}{section.4}
+\contentsline {subsection}{\numberline {4.1}First usage}{3}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Calculating relative concentrations}{4}{subsection.4.2}
+\contentsline {subsection}{\numberline {4.3}Does England belong to the United Kingdom?}{4}{subsection.4.3}
+\contentsline {subsection}{\numberline {4.4}Creating a heat map}{5}{subsection.4.4}
+\contentsline {section}{\numberline {5}MyHeritage matches}{6}{section.5}
